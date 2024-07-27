@@ -27,6 +27,7 @@ model Users {
 
 model Accounts {
   id String @id @default(cuid())
+  acc_numb String
   password String
   pin String
   balance Int
@@ -46,10 +47,11 @@ model TransactionType {
 model Transactions {
   id String @id @default(cuid())
   amount Int
-  note String
+  note String?
   date DateTime @default(now())
-  account Accounts @relation(fields: [accountId], references: [id])
-  accountId String
+  sourceAccount Accounts @relation(fields: [accountFromId], references: [id])
+  accountFromId String
+  accountToId String
   type TransactionType @relation(fields: [transactionTypeId], references: [id])
   transactionTypeId Int
 }
