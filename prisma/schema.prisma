@@ -14,44 +14,44 @@ datasource db {
 }
 
 model Users {
-  id String @id @default(cuid())
-  nik String
-  name String
-  address String
-  email String @unique
-  phone_number  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nik           String    @db.VarChar(225)
+  name          String    @db.VarChar(225)
+  address       String
+  email         String    @db.VarChar(225) @unique
+  phone_number  String    @db.VarChar(20)
+  createdAt     DateTime? @db.Timestamptz() @default(now())
+  updatedAt     DateTime? @db.Timestamptz() @updatedAt
   account Accounts[]
 }
 
 model Accounts {
-  id String @id @default(cuid())
-  acc_numb String
-  password String
-  pin String
-  balance Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user Users @relation(fields: [userId], references: [id])
-  userId String
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  acc_numb      String    @db.VarChar(225)
+  password      String    @db.VarChar(225)
+  pin           String    @db.VarChar(6)
+  balance       Int
+  createdAt     DateTime? @db.Timestamptz() @default(now())
+  updatedAt     DateTime? @db.Timestamptz() @updatedAt
+  user          Users     @relation(fields: [userId], references: [id])
+  userId        String    @db.Uuid
   transaction Transactions[]
 }
 
 model TransactionType {
-  id Int @id @default(autoincrement())
-  desc String
+  id    Int     @id @default(autoincrement())
+  desc  String
   transaction Transactions[]
 }
 
 model Transactions {
-  id String @id @default(cuid())
-  amount Int
-  note String?
-  date DateTime @default(now())
-  sourceAccount Accounts @relation(fields: [accountFromId], references: [id])
-  accountFromId String
-  accountToId String
-  type TransactionType @relation(fields: [transactionTypeId], references: [id])
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  amount        Int
+  note          String?
+  date          DateTime  @default(now())
+  sourceAccount Accounts  @relation(fields: [accountFromId], references: [id])
+  accountFromId String    @db.Uuid
+  accountToId   String    @db.Uuid
+  type          TransactionType @relation(fields: [transactionTypeId], references: [id])
   transactionTypeId Int
 }

@@ -1,26 +1,27 @@
 -- CreateTable
 CREATE TABLE "Users" (
-    "id" TEXT NOT NULL,
-    "nik" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "nik" VARCHAR(225) NOT NULL,
+    "name" VARCHAR(225) NOT NULL,
     "address" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "phone_number" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "email" VARCHAR(225) NOT NULL,
+    "phone_number" VARCHAR(20) NOT NULL,
+    "createdAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ,
 
     CONSTRAINT "Users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Accounts" (
-    "id" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "pin" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "acc_numb" VARCHAR(225) NOT NULL,
+    "password" VARCHAR(225) NOT NULL,
+    "pin" VARCHAR(6) NOT NULL,
     "balance" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" TEXT NOT NULL,
+    "createdAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "Accounts_pkey" PRIMARY KEY ("id")
 );
@@ -35,11 +36,12 @@ CREATE TABLE "TransactionType" (
 
 -- CreateTable
 CREATE TABLE "Transactions" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "amount" INTEGER NOT NULL,
-    "note" TEXT NOT NULL,
+    "note" TEXT,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "accountId" TEXT NOT NULL,
+    "accountFromId" UUID NOT NULL,
+    "accountToId" UUID NOT NULL,
     "transactionTypeId" INTEGER NOT NULL,
 
     CONSTRAINT "Transactions_pkey" PRIMARY KEY ("id")
@@ -52,7 +54,7 @@ CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
 ALTER TABLE "Accounts" ADD CONSTRAINT "Accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Transactions" ADD CONSTRAINT "Transactions_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Accounts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Transactions" ADD CONSTRAINT "Transactions_accountFromId_fkey" FOREIGN KEY ("accountFromId") REFERENCES "Accounts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Transactions" ADD CONSTRAINT "Transactions_transactionTypeId_fkey" FOREIGN KEY ("transactionTypeId") REFERENCES "TransactionType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

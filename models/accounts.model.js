@@ -1,15 +1,37 @@
 const prisma = require('../config/prisma');
 
-async function createNewAccount (password, pin, balance, userId, acc_number) {
-    return await prisma.users.create({
-        data: { 
-            password, 
-            pin, 
-            balance, 
-            userId, 
-            acc_number
+const ACCOUNTS = {
+    create: async (req) => {
+        const { acc_numb, password, pin, balance, userId} = req.body;
+        
+        try {
+            const result = await prisma.accounts.create({
+                data: {
+                    acc_numb,
+                    password,
+                    pin,
+                    balance,
+                    userId
+                },
+                select: {
+                    id: true,
+                    acc_numb: true,
+                    password: true,
+                    pin: true,
+                    balance: true,
+                    userId: true,
+                    createdAt: true
+                }
+            })
+            return result
+        } catch (err) {
+            console.log(err)
+            return {
+                status: false,
+                message: err.message
+            }
         }
-    });
-};
+    }
+}
 
-module.exports = {createNewAccount};
+module.exports = ACCOUNTS;

@@ -12,9 +12,16 @@ async function index(req, res) {
                 phone_number: true,
             }
         });
-        res.json(users);
+        res.json({
+            status: 200,
+            message: "Success GET Users API",
+            data: users
+        })
     } catch (err) {
-        throw new Error(err);
+        res.status(500).json({
+            status: false,
+            message: err.message,
+        });
     }
 }
 
@@ -43,28 +50,31 @@ async function userById(req, res) {
                 phone_number: true,
             }
         })
-        res.json(userDetails)
+        res.json({
+            status: 200,
+            message: "Success GET User API",
+            data: userDetails
+        })
     } catch (err) {
-        res.send(err.message);
+        res.status(500).json({
+            status: false,
+            message: err.message,
+        });
     }
 }
 
 async function createUser(req, res) {
-    try {
-        const { nik, name, address, email, phone_number } = req.body;
-        if (!nik || !name || !address || !email || !phone_number) {
-            res.json({
-                status: 'error',
-                message: 'Data can not be Null'
-            });
-        }else{
-            const newUser = await USER_MODELS.createNewUser(nik, name, address, email, phone_number);
-            res.json(newUser);
-        }                        
-    } catch (err) {
+    try {                
+        const result = await USER_MODELS.create(req);
         res.json({
-            status: 'error',
-            message: 'Failed to create user'
+            status: 201,
+            message: "Success POST Users API",
+            data: result
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: false,
+            message: err.message,
         });
     }
 }

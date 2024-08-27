@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const PORT = 5000;
 
+app.use(express.json());
+
 const INDEX_ROUTES = require('./routes/index');
 app.use(INDEX_ROUTES);
 

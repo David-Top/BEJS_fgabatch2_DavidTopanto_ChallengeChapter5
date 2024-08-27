@@ -1,15 +1,41 @@
 const prisma = require('../config/prisma');
 
-async function createNewUser (nik, name, address, email, phone_number) {
-    return await prisma.users.create({
-        data: { 
-            nik, 
-            name, 
-            address, 
-            email, 
-            phone_number 
-        }
-    });
-};
+const USERS = {
+    create: async (req) => {
+        const { nik, name, address, email, phone_number } = req.body;
+        try {            
+            if (!nik || !name || !address || !email || !phone_number) {
+                throw new Error("Data can not be Null");                
+            }
+            
+            const user = await prisma.users.create({
+                data: {
+                    nik,
+                    name,
+                    address,
+                    email,
+                    phone_number
+                },
+                select: {
+                    id: true,
+                    nik: true,
+                    name: true,
+                    address: true,
+                    email: true,
+                    phone_number: true,
+                    createdAt: true
+                }
+            });
 
-module.exports = {createNewUser};
+            return user;
+        } catch (err) {
+            console.log(err);
+            return{
+                status: false,
+                message: err.message
+            };
+        }
+    }
+}
+
+module.exports = USERS;

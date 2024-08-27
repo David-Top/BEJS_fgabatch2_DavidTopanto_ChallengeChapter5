@@ -9,9 +9,16 @@ async function index(req, res) {
                 balance: true
             }
         });
-        res.json(accounts);
+        res.json({
+            status: 200,
+            message: "Success GET Accounts API",
+            data: accounts
+        })
     } catch (err) {
-        throw new Error(err);
+        res.status(500).json({
+            status: false,
+            message: err.message,
+        });
     }
 }
 
@@ -37,29 +44,34 @@ async function getById(req, res) {
                 balance: true
             }
         })
-        res.json(accDetails);
+        res.json({
+            status: 200,
+            message: "Success GET Account API",
+            data: accDetails
+        });
     } catch (err) {
-        res.send(err.message)
+        res.status(500).json({
+            status: false,
+            message: err.message,
+        });
     }
 }
 
-async function createAccount(res, req) {
+async function createAccount(req, res) {
     try {
-        const { password, pin, balance, userId, acc_number } = req.body;
-        if (!password || !pin || !balance || !userId || !acc_number) {
-            res.json({
-                status: 'error',
-                message: 'Data can not be Null'
-            });
-        }else{
-            const newAccount = await ACCOUNT_MODEL.createNewAccount(password, pin, balance, userId, acc_number);
-            res.json(newAccount);
-        }
-    } catch (err) {
+        const newAccount = await ACCOUNT_MODEL.create(req);
+
         res.json({
-            status: 'error',
-            message: 'Failed to create user'
+            status: 201,
+            message: "Success POST Account API",
+            data: newAccount
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: false,
+            message: err.message,
         });
+        console.log(err);
     }
 }
 
