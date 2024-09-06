@@ -2,9 +2,9 @@ const prisma = require('../config/prisma');
 
 const USERS = {
     create: async (req) => {
-        const { nik, name, address, email, phone_number } = req.body;
+        const { nik, name, address, phone_number } = req.body;
         try {            
-            if (!nik || !name || !address || !email || !phone_number) {
+            if (!nik || !name || !address || !phone_number) {
                 throw new Error("Data can not be Null");                
             }
             
@@ -12,8 +12,7 @@ const USERS = {
                 data: {
                     nik,
                     name,
-                    address,
-                    email,
+                    address,                 
                     phone_number
                 },
                 select: {
@@ -21,7 +20,6 @@ const USERS = {
                     nik: true,
                     name: true,
                     address: true,
-                    email: true,
                     phone_number: true,
                     createdAt: true
                 }
