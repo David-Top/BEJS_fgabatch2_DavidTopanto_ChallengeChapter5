@@ -17,8 +17,7 @@ model Users {
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nik           String    @db.VarChar(225)
   name          String    @db.VarChar(225)
-  address       String
-  email         String    @db.VarChar(225) @unique
+  address       String  
   phone_number  String    @db.VarChar(20)
   createdAt     DateTime? @db.Timestamptz() @default(now())
   updatedAt     DateTime? @db.Timestamptz() @updatedAt
@@ -28,6 +27,7 @@ model Users {
 model Accounts {
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   acc_numb      String    @db.VarChar(225)
+  email         String    @db.VarChar(225) @unique
   password      String    @db.VarChar(225)
   pin           String    @db.VarChar(6)
   balance       Int
